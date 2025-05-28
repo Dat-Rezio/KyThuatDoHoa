@@ -192,7 +192,12 @@ int main(int argc, char** argv) {
             transform = Matrix4x4::scale(sx, sy, sz);
             break;
         case 2:
-            cout << "Nhap he so shear (a, b, c, d, e, f): ";
+            cout << "Ma tran shear:\n";
+            cout << "1 c e 0\n";
+            cout << "a 1 f 0\n";
+            cout << "b d 1 0\n";
+            cout << "0 0 0 1\n";
+            cout << "Nhap he so shear (a, b, c, d, e, f):";
             float a, b, c, d, e, f;
             cin >> a >> b >> c >> d >> e >> f;
             transform = Matrix4x4::shear(a, b, c, d, e, f);
