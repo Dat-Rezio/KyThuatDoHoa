@@ -186,24 +186,34 @@ int main(int argc, char** argv) {
     Matrix4x4 transform = Matrix4x4::identity();
     switch (choice) {
         case 1:
-            cout << "Nhap he so scale (sx, sy, sz): ";
+            cout << "Ma tran Scale:\n";
+            cout << "sx 0  0  0\n";
+            cout << "0  sy 0  0\n";
+            cout << "0  0  sz 0\n";
+            cout << "0  0  0  1\n";
+            cout << "Nhap he so (sx, sy, sz): ";
             float sx, sy, sz;
             cin >> sx >> sy >> sz;
             transform = Matrix4x4::scale(sx, sy, sz);
             break;
         case 2:
-            cout << "Ma tran shear:\n";
+            cout << "Ma tran Shear:\n";
             cout << "1 c e 0\n";
             cout << "a 1 f 0\n";
             cout << "b d 1 0\n";
             cout << "0 0 0 1\n";
-            cout << "Nhap he so shear (a, b, c, d, e, f):";
+            cout << "Nhap he so (a, b, c, d, e, f):";
             float a, b, c, d, e, f;
             cin >> a >> b >> c >> d >> e >> f;
             transform = Matrix4x4::shear(a, b, c, d, e, f);
             break;
         case 3:
-            cout << "Nhap he so dich chuyen (dx, dy, dz): ";
+            cout << "Ma tran Translate:\n";
+            cout << "1  0  0  0\n";
+            cout << "0  1  0  0\n";
+            cout << "0  0  1  0\n";
+            cout << "dx dy dz 1\n";
+            cout << "Nhap he so (dx, dy, dz): ";
             float dx, dy, dz;
             cin >> dx >> dy >> dz;
             transform = Matrix4x4::translate(dx, dy, dz);
