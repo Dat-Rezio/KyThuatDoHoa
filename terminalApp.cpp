@@ -12,6 +12,7 @@ float zoom = 1.0f;                  // Hệ số zoom
 int lastX, lastY;                   // Vị trí chuột lần trước
 bool leftButtonDown = false;
 bool rightButtonDown = false;
+bool middleButtonDown = false;
 
 struct Point3D {
     float x, y, z, w;
@@ -68,7 +69,16 @@ struct Matrix4x4 {
 };
 
 Point3D A(0, 0, 0), B(1, 0, 0), C(0, 1, 0), D(0, 0, 1);
+Point3D center;
 Point3D A2, B2, C2, D2;
+
+Point3D computeCentroid(Point3D a, Point3D b, Point3D c, Point3D d) {
+    return Point3D(
+        (a.x + b.x + c.x + d.x) / 4.0f,
+        (a.y + b.y + c.y + d.y) / 4.0f,
+        (a.z + b.z + c.z + d.z) / 4.0f
+    );
+}
 
 void drawTetrahedron(Point3D a, Point3D b, Point3D c, Point3D d, bool wireframe = true) {
     glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
@@ -84,7 +94,7 @@ void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     
-    gluLookAt(0, 0, 5 / zoom, 0, 0, 0, 0, 1, 0); // zoom ảnh hưởng khoảng cách camera
+    gluLookAt(0, 0, 5 / zoom, center.x, center.y, center.z, 0, 1, 0); // zoom ảnh hưởng khoảng cách camera, nhìn vào tâm hình
     glRotatef(angleY, 1.0f, 0.0f, 0.0f); // xoay quanh X
     glRotatef(angleX, 0.0f, 1.0f, 0.0f); // xoay quanh Y
 
@@ -119,6 +129,8 @@ void mouse(int button, int state, int x, int y) {
         leftButtonDown = (state == GLUT_DOWN);
     else if (button == GLUT_RIGHT_BUTTON)
         rightButtonDown = (state == GLUT_DOWN);
+    else if (button == GLUT_MIDDLE_BUTTON)
+        middleButtonDown = (state == GLUT_DOWN);
 
     lastX = x;
     lastY = y;
@@ -139,6 +151,14 @@ void motion(int x, int y) {
         if (zoom > 10.0f) zoom = 10.0f;
     }
 
+    if (middleButtonDown) {
+        float panSpeed = 0.01f * zoom; // tốc độ pan tỉ lệ với zoom
+
+        // Tính toán vector pan trong không gian camera
+        center.x -= dx * panSpeed;
+        center.y += dy * panSpeed; // trục y ngược vì tọa độ màn hình y đi xuống
+    }
+
     lastX = x;
     lastY = y;
 
@@ -147,6 +167,17 @@ void motion(int x, int y) {
 
 int main(int argc, char** argv) {
     int choice;
+    cout << "Nhập tọa độ các đỉnh của tứ diện:\n";
+    cout << "A (x, y, z): ";
+    cin >> A.x >> A.y >> A.z;
+    cout << "B (x, y, z): ";
+    cin >> B.x >> B.y >> B.z;
+    cout << "C (x, y, z): ";
+    cin >> C.x >> C.y >> C.z;
+    cout << "D (x, y, z): ";
+    cin >> D.x >> D.y >> D.z;
+    center = computeCentroid(A, B, C, D);
+    A2 = A; B2 = B; C2 = C; D2 = D; // Sao chép tọa độ ban đầu
     cout << "Chon phep bien doi:\n";
     cout << "1. Scale\n2. Shear\n3. Translate\n";
     cout << "Nhap lua chon: ";
