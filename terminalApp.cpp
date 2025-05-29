@@ -178,57 +178,71 @@ int main(int argc, char** argv) {
     cin >> D.x >> D.y >> D.z;
     center = computeCentroid(A, B, C, D);
     A2 = A; B2 = B; C2 = C; D2 = D; // Sao chép tọa độ ban đầu
-    cout << "Chon phep bien doi:\n";
-    cout << "1. Scale\n2. Shear\n3. Translate\n";
-    cout << "Nhap lua chon: ";
-    cin >> choice;
+    
+    
+    
+    bool control = true;
+    while(control) {
+        cout << "Chọn phép biến đổi:\n";
+        cout << "1. Scale\n2. Shear\n3. Translate\n";
+        cout << "Nhập lựa chọn: ";
+        cin >> choice;
 
-    Matrix4x4 transform = Matrix4x4::identity();
-    switch (choice) {
-        case 1:
-            cout << "Ma tran Scale:\n";
-            cout << "sx 0  0  0\n";
-            cout << "0  sy 0  0\n";
-            cout << "0  0  sz 0\n";
-            cout << "0  0  0  1\n";
-            cout << "Nhap he so (sx, sy, sz): ";
-            float sx, sy, sz;
-            cin >> sx >> sy >> sz;
-            transform = Matrix4x4::scale(sx, sy, sz);
-            break;
-        case 2:
-            cout << "Ma tran Shear:\n";
-            cout << "1 c e 0\n";
-            cout << "a 1 f 0\n";
-            cout << "b d 1 0\n";
-            cout << "0 0 0 1\n";
-            cout << "Nhap he so (a, b, c, d, e, f):";
-            float a, b, c, d, e, f;
-            cin >> a >> b >> c >> d >> e >> f;
-            transform = Matrix4x4::shear(a, b, c, d, e, f);
-            break;
-        case 3:
-            cout << "Ma tran Translate:\n";
-            cout << "1  0  0  0\n";
-            cout << "0  1  0  0\n";
-            cout << "0  0  1  0\n";
-            cout << "dx dy dz 1\n";
-            cout << "Nhap he so (dx, dy, dz): ";
-            float dx, dy, dz;
-            cin >> dx >> dy >> dz;
-            transform = Matrix4x4::translate(dx, dy, dz);
-            break;
-        default:
-            cout << "Lua chon khong hop le! Su dung phep bien doi mac dinh.\n";
-            transform = Matrix4x4::identity();
-            break;
+        Matrix4x4 transform = Matrix4x4::identity();
+        switch (choice) {
+            case 1:
+                cout << "Ma trận Scale:\n";
+                cout << "sx 0  0  0\n";
+                cout << "0  sy 0  0\n";
+                cout << "0  0  sz 0\n";
+                cout << "0  0  0  1\n";
+                cout << "Nhập hệ số (sx, sy, sz): ";
+                float sx, sy, sz;
+                cin >> sx >> sy >> sz;
+                transform = Matrix4x4::scale(sx, sy, sz);
+                control = false;
+                break;
+            case 2:
+                cout << "Ma trận Shear:\n";
+                cout << "1 c e 0\n";
+                cout << "a 1 f 0\n";
+                cout << "b d 1 0\n";
+                cout << "0 0 0 1\n";
+                cout << "Nhập hệ số (a, b, c, d, e, f):";
+                float a, b, c, d, e, f;
+                cin >> a >> b >> c >> d >> e >> f;
+                transform = Matrix4x4::shear(a, b, c, d, e, f);
+                control = false;
+                break;
+            case 3:
+                cout << "Ma trận Translate:\n";
+                cout << "1  0  0  0\n";
+                cout << "0  1  0  0\n";
+                cout << "0  0  1  0\n";
+                cout << "dx dy dz 1\n";
+                cout << "Nhập hệ số (dx, dy, dz): ";
+                float dx, dy, dz;
+                cin >> dx >> dy >> dz;
+                transform = Matrix4x4::translate(dx, dy, dz);
+                control = false;
+                break;
+            default:
+                cout << "Lựa chọn không hợp lệ! Vui lòng chọn lại!\n";
+                transform = Matrix4x4::identity();
+                break;
+        }
+        if (control == false) {
+            A2 = transform.apply(A);
+            B2 = transform.apply(B);
+            C2 = transform.apply(C);
+            D2 = transform.apply(D);
+            cout << "Dieu khien: \n";
+            cout << "1. Xoay (dùng chuột trái)\n";
+            cout << "2. Zoom (dùng chuột phải)\n";
+            cout << "3. Di chuyển (dùng chuột giữa)\n";
+        }
     }
-
-    A2 = transform.apply(A);
-    B2 = transform.apply(B);
-    C2 = transform.apply(C);
-    D2 = transform.apply(D);
-
+    
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowSize(800, 600);
